@@ -24,14 +24,22 @@ def sharp_or_flat(input_key):
     # check if flat or sharp key
     if len(input_key) == 2:
         if 'b' in input_key[1]:
-            print("Flat key")
+            print("Flat key.")
             return False
+        elif '#' in input_key[1]:
+            print("Sharp key.")   # this block is obsolete since all keys are defined in choices
+            return True
         else:
-            print("Unknown character.")   # this block is obsolete since all keys are defined in choices ToDo: remove
+            print("Unknown character.")   # this block is obsolete since all keys are defined in choices
             return None
+    elif len(input_key) == 1:
+        if 'F' in input_key[0]:
+            print("Flat key.")
+        else:
+            print("Sharp key.")
+            return True
     else:
-        print("Sharp key.")
-        return True
+        print("Wrong key input.")
 
 
 def reorder_notes(input_key):
@@ -64,8 +72,8 @@ def add_sharps_or_flats(input_key, input_notes):
 
     # if the key contains sharps
     if sharp_or_flat(input_key):
-        print("Contains sharp")
-        root = input_notes[0]
+        print("Contains sharp notes.")
+        root = input_key
         amount_sharps = MAJOR_SHARP_KEYS.index(root)
         print("Amount sharps: {}".format(amount_sharps))
         if amount_sharps == 0:
@@ -89,10 +97,12 @@ def add_sharps_or_flats(input_key, input_notes):
             print("Does not contain any flats.")
             return input_notes
         flat_notes = list(MAJOR_KEYS_FLATS[:(amount_flats)])
-        print(flat_notes)
-        output_notes = 0
-
-
+        print("Flats are: {}".format(flat_notes))
+        print("Regular tones are: {}".format(MAJOR_KEYS_FLATS[amount_flats:]))
+        for flat in flat_notes:
+            index = input_notes.index(flat)
+            input_notes[index] = flat + 'b'
+            output_notes = input_notes
 
     return output_notes
 
