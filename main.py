@@ -7,7 +7,7 @@ class mylist(list):
         return super(mylist,self).__contains__(other.upper())
 
 parser = argparse.ArgumentParser()
-parser.add_argument('key', choices = mylist(MUSIC_KEYS), nargs=1)
+parser.add_argument('key', choices = MUSIC_KEYS, nargs=1)
 parser.add_argument('--chord_type', choices = CHORD_TYPE, default='triad', nargs=1)
 parser.add_argument('--mode', choices= MODES, default='ionian')
 args = parser.parse_args(('Gb --chord_type=triad').split()) # ToDo: remove argument when ready
@@ -66,10 +66,10 @@ def add_sharps_or_flats(input_key, input_notes):
     if sharp_or_flat(input_key):
         print("Contains sharp")
         root = input_notes[0]
-        amount_sharps = MAJOR_KEYS.index(root)
+        amount_sharps = MAJOR_SHARP_KEYS.index(root)
         print("Amount sharps: {}".format(amount_sharps))
         if amount_sharps == 0:
-            print("No sharps")
+            print("Does not contain any sharps.")
             return input_notes
         sharp_notes = list((MAJOR_KEYS_SHARPS[:(amount_sharps)]))
         print("Sharps are: {}".format(sharp_notes))
@@ -83,8 +83,14 @@ def add_sharps_or_flats(input_key, input_notes):
     else:
         print("Contains flats.")
         root = input_notes[0]
-        amount_flats = MAJOR_KEYS.index(root)
-        print(amount_flats)
+        amount_flats = MAJOR_FLAT_KEYS.index(root)
+        print("Amount flats: {}".format(amount_flats))
+        if amount_flats == 0:
+            print("Does not contain any flats.")
+            return input_notes
+        flat_notes = list(MAJOR_KEYS_FLATS[:(amount_flats)])
+        print(flat_notes)
+        output_notes = 0
 
 
 
