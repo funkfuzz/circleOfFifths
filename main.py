@@ -7,10 +7,10 @@ class mylist(list):
         return super(mylist,self).__contains__(other.upper())
 
 parser = argparse.ArgumentParser()
-parser.add_argument('key', choices = MUSIC_KEYS, nargs=1)
+parser.add_argument('key', choices = mylist(MUSIC_KEYS), nargs=1)
 parser.add_argument('--chord_type', choices = CHORD_TYPE, default='triad', nargs=1)
 parser.add_argument('--mode', choices= MODES, default='ionian')
-args = parser.parse_args(('Gb --chord_type=triad').split()) # ToDo: remove argument when ready
+args = parser.parse_args(('c --chord_type=triad').split()) # ToDo: remove argument when ready
 print('key: %s'%(args.key[0]))
 
 def sharp_or_flat(input_key):
@@ -62,7 +62,7 @@ def reorder_notes(input_key):
 
     return key_notes
 
-def add_sharps_or_flats(input_key, input_notes):
+def add_sharps_or_flats(input_key, input_notes, major_key):
     '''
         The function adds sharps or flat notes to the ordered key notes.
     :param input_key:
@@ -74,71 +74,100 @@ def add_sharps_or_flats(input_key, input_notes):
     if sharp_or_flat(input_key):
         print("Contains sharp notes.")
         root = input_key
-        amount_sharps = MAJOR_SHARP_KEYS.index(root)
-        print("Amount sharps: {}".format(amount_sharps))
-        if amount_sharps == 0:
-            print("Does not contain any sharps.")
-            return input_notes
-        sharp_notes = list((MAJOR_KEYS_SHARPS[:(amount_sharps)]))
-        print("Sharps are: {}".format(sharp_notes))
-        print("Regular tones are: {}".format(MAJOR_KEYS_SHARPS[amount_sharps:]))
-        for sharp in sharp_notes:
-            index = input_notes.index(sharp)
-            input_notes[index] = sharp + '#'
-            output_notes = input_notes
+        if major_key:
+            amount_sharps = MAJOR_SHARP_KEYS.index(root)
+            print("Amount sharps: {}".format(amount_sharps))
+            if amount_sharps == 0:
+                print("Does not contain any sharps.")
+                return input_notes
+            sharp_notes = list((KEY_SHARPS[:(amount_sharps)]))
+            print("Sharps are: {}".format(sharp_notes))
+            print("Regular tones are: {}".format(KEY_SHARPS[amount_sharps:]))
+            for sharp in sharp_notes:
+                index = input_notes.index(sharp)
+                input_notes[index] = sharp + '#'
+                output_notes = input_notes
+        else:
+            amount_sharps = MINOR_SHARP_KEYS.index(root)
+            print("Amount sharps: {}".format(amount_sharps))
+            if amount_sharps == 0:
+                print("Does not contain any sharps.")
+                return input_notes
+            sharp_notes = list((KEY_SHARPS[:(amount_sharps)]))
+            print("Sharps are: {}".format(sharp_notes))
+            print("Regular tones are: {}".format(KEY_SHARPS[amount_sharps:]))
+            for sharp in sharp_notes:
+                index = input_notes.index(sharp)
+                input_notes[index] = sharp + '#'
+                output_notes = input_notes
 
     # if the key contains flats
     else:
         print("Contains flats.")
-        root = input_notes[0]
-        amount_flats = MAJOR_FLAT_KEYS.index(root)
-        print("Amount flats: {}".format(amount_flats))
-        if amount_flats == 0:
-            print("Does not contain any flats.")
-            return input_notes
-        flat_notes = list(MAJOR_KEYS_FLATS[:(amount_flats)])
-        print("Flats are: {}".format(flat_notes))
-        print("Regular tones are: {}".format(MAJOR_KEYS_FLATS[amount_flats:]))
-        for flat in flat_notes:
-            index = input_notes.index(flat)
-            input_notes[index] = flat + 'b'
-            output_notes = input_notes
+        if major_key:
+            root = input_notes[0]
+            amount_flats = MAJOR_FLAT_KEYS.index(root)
+            print("Amount flats: {}".format(amount_flats))
+            if amount_flats == 0:
+                print("Does not contain any flats.")
+                return input_notes
+            flat_notes = list(KEY_FLATS[:(amount_flats)])
+            print("Flats are: {}".format(flat_notes))
+            print("Regular tones are: {}".format(KEY_FLATS[amount_flats:]))
+            for flat in flat_notes:
+                index = input_notes.index(flat)
+                input_notes[index] = flat + 'b'
+                output_notes = input_notes
+        else: # if minor
+            root = input_notes[0]
+            amount_flats = MINOR_FLAT_KEYS.index(root)
+            print("Amount flats: {}".format(amount_flats))
+            if amount_flats == 0:
+                print("Does not contain any flats.")
+                return input_notes
+            flat_notes = list(KEY_FLATS[:(amount_flats)])
+            print("Flats are: {}".format(flat_notes))
+            print("Regular tones are: {}".format(KEY_FLATS[amount_flats:]))
+            for flat in flat_notes:
+                index = input_notes.index(flat)
+                input_notes[index] = flat + 'b'
+                output_notes = input_notes
 
     return output_notes
 
 
 
-
-
 def main():
+    # read console input
     chord_type = args.chord_type[0]
     key = args.key[0]
-    major_scale = False
     # check if major or minor key
     if key[0].isupper():
         print('Major Scale')
-        major_scale = True
+        major = True
         if chord_type == 'seventh':
             chords_dict = {'Imaj7': '', 'ii7': '', 'iii7': '', 'IVmaj7': '', 'V7': '', 'vi7': '', 'vii7b5°': ''}
         else:
             chords_dict = {'I': '', 'ii': '', 'iii': '', 'IV': '', 'V': '', 'vi': '', 'vii°': ''}
 
     else:
-        print('minor Scale')
+        print('Minor Scale')
+        major = False
         # check if triads or seventh chords notation
         if chord_type == 'seventh':
             chords_dict = {'i7': '', 'ii7b5': '', 'bIIImaj7': '', 'iv7': '', 'v7': '', 'bVImaj7': '', 'bVII7': ''}
         else:
             chords_dict = {'I': '', 'ii°': '', 'biii': '', 'iv': '', 'v': '', 'bVI': '', 'bVII': ''}
 
-    # estimate the right note order for this key
+    # start from the root
     ordered_notes = reorder_notes(key.upper())
-    key_notes = add_sharps_or_flats(key, ordered_notes)
+    # add the sharps or flats
+    key_notes = add_sharps_or_flats(key, ordered_notes, major)
+    # put the chords and their functions together
     chords_dict = dict(zip(chords_dict, key_notes))
     print(chords_dict)
 
-    return 1
-
+    return 0
 
 
 if __name__ == "__main__":
