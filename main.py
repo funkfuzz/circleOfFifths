@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('key', choices = mylist(MUSIC_KEYS), nargs=1)
 parser.add_argument('--chord_type', choices = CHORD_TYPE, default='triad', nargs=1)
 parser.add_argument('--mode', choices= MODES, default='ionian')
-args = parser.parse_args(('c --chord_type=triad').split()) # ToDo: remove argument when ready
+args = parser.parse_args(('f --chord_type=triad').split()) # ToDo: remove argument when ready
 print('key: %s'%(args.key[0]))
 
 def sharp_or_flat(input_key):
@@ -21,25 +21,49 @@ def sharp_or_flat(input_key):
     :param input_key:
     :return: bool whether key is sharp or flat
     '''
-    # check if flat or sharp key
-    if len(input_key) == 2:
-        if 'b' in input_key[1]:
-            print("Flat key.")
-            return False
-        elif '#' in input_key[1]:
-            print("Sharp key.")   # this block is obsolete since all keys are defined in choices
-            return True
-        else:
-            print("Unknown character.")   # this block is obsolete since all keys are defined in choices
-            return None
-    elif len(input_key) == 1:
-        if 'F' in input_key[0]:
-            print("Flat key.")
-        else:
-            print("Sharp key.")
-            return True
+    matches_sharp = set(input_key).intersection(set(MAJOR_SHARP_KEYS))
+    print("sharp match: {}".format(matches_sharp))
+    matches_flat = set(input_key).intersection(set(MAJOR_FLAT_KEYS))
+    print("flat match: {}".format(matches_flat))
+    matches_sharp_m = set(input_key).intersection(set(MINOR_SHARP_KEYS))
+    print("sharp match minor: {}".format(matches_sharp_m))
+    matches_flat_m = set(input_key).intersection(set(MINOR_FLAT_KEYS))
+    print("flat match minor: {}".format(matches_flat_m))
+    matches_flat_m.empty()
+
+    if input_key in MAJOR_SHARP_KEYS or MINOR_SHARP_KEYS:
+        print("Sharp key.")
+        return True
+
+    elif input_key in MAJOR_FLAT_KEYS or MINOR_FLAT_KEYS:
+        print ("Flat key.")
+
+        return False
+
     else:
-        print("Wrong key input.")
+        print("Unknown key.")
+        
+        return None
+
+    ## check if flat or sharp key
+    #if len(input_key) == 2:
+    #    if 'b' in input_key[1]:
+    #        print("Flat key.")
+    #        return False
+    #    elif '#' in input_key[1]:
+    #        print("Sharp key.")   # this block is obsolete since all keys are defined in choices
+    #        return True
+    #    else:
+    #        print("Unknown character.")   # this block is obsolete since all keys are defined in choices
+    #        return None
+    #elif len(input_key) == 1:
+    #    if 'F' in input_key[0]:
+    #        print("Flat key.")
+    #    else:
+    #        print("Sharp key.")
+    #        return True
+    #else:
+    #    print("Wrong key input.")
 
 
 def reorder_notes(input_key):

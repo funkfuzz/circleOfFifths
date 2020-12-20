@@ -8,11 +8,11 @@ CHORD_TYPE = ('triad', 'seventh')
 
 # major keys
 MAJOR_SHARP_KEYS = ('C', 'G', 'D', 'A', 'E', 'B', 'F#')                 # the sharp half circle of the circle of fifths
-MAJOR_FLAT_KEYS = ('C', 'F', 'B', 'E', 'A', 'D', 'G')        # the flat half circle of the circle of fifths
+MAJOR_FLAT_KEYS = ('C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb')        # the flat half circle of the circle of fifths
 
 # minor keys
 MINOR_SHARP_KEYS = ('a', 'e', 'b', 'f#', 'c#', 'g#', 'd#')                 # the sharp half circle of the circle of fifths
-MINOR_FLAT_KEYS = ('a', 'd', 'g', 'c', 'f', 'a#', 'd#')        # the flat half circle of the circle of fifths
+MINOR_FLAT_KEYS = ('a', 'd', 'g', 'c', 'f', 'bb', 'eb')        # the flat half circle of the circle of fifths
 
 # common for both major and minor
 KEY_SHARPS = ('F', 'C', 'G', 'D', 'A', 'E', 'B')     # the sharp half circle of the circle of fifths
