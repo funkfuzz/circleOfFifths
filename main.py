@@ -10,10 +10,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument('key', choices = mylist(MUSIC_KEYS), nargs=1)
 parser.add_argument('--chord_type', choices = CHORD_TYPE, default='triad', nargs=1)
 parser.add_argument('--mode', choices= MODES, default='ionian')
-args = parser.parse_args(('f --chord_type=triad').split()) # ToDo: remove argument when ready
+args = parser.parse_args(('F --chord_type=triad').split()) # ToDo: remove argument when ready
 print('key: %s'%(args.key[0]))
 
-def sharp_or_flat(input_key):
+def sharp_key(input_key, major):
     '''
     Returns True if the input key contains sharps, and False
     if the input key contains flats.
@@ -21,29 +21,43 @@ def sharp_or_flat(input_key):
     :param input_key:
     :return: bool whether key is sharp or flat
     '''
-    matches_sharp = set(input_key).intersection(set(MAJOR_SHARP_KEYS))
-    print("sharp match: {}".format(matches_sharp))
-    matches_flat = set(input_key).intersection(set(MAJOR_FLAT_KEYS))
-    print("flat match: {}".format(matches_flat))
-    matches_sharp_m = set(input_key).intersection(set(MINOR_SHARP_KEYS))
-    print("sharp match minor: {}".format(matches_sharp_m))
-    matches_flat_m = set(input_key).intersection(set(MINOR_FLAT_KEYS))
-    print("flat match minor: {}".format(matches_flat_m))
-    matches_flat_m.empty()
 
-    if input_key in MAJOR_SHARP_KEYS or MINOR_SHARP_KEYS:
-        print("Sharp key.")
-        return True
+    if major:
+        matches_sharp = set(input_key).intersection(set(MAJOR_SHARP_KEYS))
+        print("sharp key match: {}".format(matches_sharp))
+        matches_flat = set(input_key).intersection(set(MAJOR_FLAT_KEYS))
+        print("flat key match: {}".format(matches_flat))
 
-    elif input_key in MAJOR_FLAT_KEYS or MINOR_FLAT_KEYS:
-        print ("Flat key.")
+        if matches_sharp:
+            print("Major sharp key.")
+            return True
 
-        return False
+        elif matches_flat:
+            print("Major flat key.")
+            return False
+
+        else:
+            print("Unknown key.")
+            return None
 
     else:
-        print("Unknown key.")
-        
-        return None
+        matches_sharp_m = set(input_key).intersection(set(MINOR_SHARP_KEYS))
+        print("sharp minor key match: {}".format(matches_sharp_m))
+        matches_flat_m = set(input_key).intersection(set(MINOR_FLAT_KEYS))
+        print("flat minor key match: {}".format(matches_flat_m))
+
+        if matches_sharp_m:
+            print("Minor sharp key.")
+            return True
+
+        elif matches_flat_m:
+            print("Minor flat key.")
+            return False
+
+        else:
+            print("Unknown key.")
+            return None
+
 
     ## check if flat or sharp key
     #if len(input_key) == 2:
@@ -77,9 +91,9 @@ def reorder_notes(input_key):
     input_key[0].upper()
     # find the index of the chosen key
     start_index = MUSIC_NOTES.index(input_key[0])
-    # find the length (should be always 7)
+    # find the length (should be 7 always )
     length = len(MUSIC_NOTES)
-    print(start_index, length)
+    print(start_index, length) # for debugging only
     # extract the notes for the key in the right order
     key_notes = (list(MUSIC_NOTES[start_index:(length)]))
     key_notes.extend(MUSIC_NOTES[0:start_index])
@@ -88,14 +102,15 @@ def reorder_notes(input_key):
 
 def add_sharps_or_flats(input_key, input_notes, major_key):
     '''
-        The function adds sharps or flat notes to the ordered key notes.
+        The function adds sharps or flat notes to the notes of the chosen key.
+
     :param input_key:
     :param input_notes:
     :return: key_notes
     '''
 
     # if the key contains sharps
-    if sharp_or_flat(input_key):
+    if sharp_key(input_key, major_key):
         print("Contains sharp notes.")
         root = input_key
         if major_key:
