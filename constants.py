@@ -21,6 +21,3 @@ KEY_FLATS = ('B', 'E', 'A', 'D',  'G', 'C', 'F')     # the flats contained in th
 
 MODES = ('ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian')
 
-
-
-# dummy
