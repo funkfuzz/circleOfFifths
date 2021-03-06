@@ -15,11 +15,12 @@ print('key: %s'%(args.key[0]))
 
 def sharp_key(input_key, major):
     '''
-    Returns True if the input key contains sharps, and False
-    if the input key contains flats.
+        Returns True if the input key contains sharps, and False
+        if the input key contains flats.
 
-    :param input_key:
-    :return: bool whether key is sharp or flat
+    :param input_key: the selected key
+    :param major: is the key major or minor?
+    :return: True if key is sharp, False if it is flat
     '''
 
     if major:
@@ -59,33 +60,12 @@ def sharp_key(input_key, major):
             return None
 
 
-    ## check if flat or sharp key
-    #if len(input_key) == 2:
-    #    if 'b' in input_key[1]:
-    #        print("Flat key.")
-    #        return False
-    #    elif '#' in input_key[1]:
-    #        print("Sharp key.")   # this block is obsolete since all keys are defined in choices
-    #        return True
-    #    else:
-    #        print("Unknown character.")   # this block is obsolete since all keys are defined in choices
-    #        return None
-    #elif len(input_key) == 1:
-    #    if 'F' in input_key[0]:
-    #        print("Flat key.")
-    #    else:
-    #        print("Sharp key.")
-    #        return True
-    #else:
-    #    print("Wrong key input.")
-
-
 def reorder_notes(input_key):
     '''
-    Reorders the notes according to the chosen tonic.
+        Reorders the notes according to the chosen root.
 
-    :param input_key: the input key
-    :return: list of the notes belonging to this key
+    :param input_key: the selected key
+    :return: list of the scale notes reordered and starting from the root
     '''
     # make uppercase
     input_key[0].upper()
@@ -104,9 +84,9 @@ def add_sharps_or_flats(input_key, input_notes, major_key):
     '''
         The function adds sharps or flat notes to the notes of the chosen key.
 
-    :param input_key:
-    :param input_notes:
-    :return: key_notes
+    :param input_key: the selected key
+    :param input_notes: the ordered notes belonging to the key, without sharps or flats
+    :return: the correct key notes
     '''
 
     # if the key contains sharps
@@ -157,7 +137,8 @@ def add_sharps_or_flats(input_key, input_notes, major_key):
                 index = input_notes.index(flat)
                 input_notes[index] = flat + 'b'
                 output_notes = input_notes
-        else: # if minor
+        # if minor key
+        else:
             root = input_notes[0]
             amount_flats = MINOR_FLAT_KEYS.index(root)
             print("Amount flats: {}".format(amount_flats))
@@ -184,6 +165,7 @@ def main():
     if key[0].isupper():
         print('Major Scale')
         major = True
+        # chord qualities depending on scale type
         if chord_type == 'seventh':
             chords_dict = {'Imaj7': '', 'ii7': '', 'iii7': '', 'IVmaj7': '', 'V7': '', 'vi7': '', 'vii7b5°': ''}
         else:
@@ -192,7 +174,7 @@ def main():
     else:
         print('Minor Scale')
         major = False
-        # check if triads or seventh chords notation
+        # chord qualities depending on scale type
         if chord_type == 'seventh':
             chords_dict = {'i7': '', 'ii7b5': '', 'bIIImaj7': '', 'iv7': '', 'v7': '', 'bVImaj7': '', 'bVII7': ''}
         else:
@@ -210,5 +192,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # execute only if run as a script
     main()
